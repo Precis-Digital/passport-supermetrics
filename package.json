@@ -1,0 +1,21 @@
+{
+  "name": "passport-supermetrics",
+  "packageManager": "yarn@3.6.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "passport-strategy": "^1.0.0",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "tsc --declaration",
+    "prepare": "yarn build"
+  },
+  "devDependencies": {
+    "@types/passport-strategy": "^0.2.38",
+    "tsc": "^2.0.4"
+  }
+}
