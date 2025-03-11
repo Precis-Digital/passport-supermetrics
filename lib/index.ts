@@ -1,3 +1,5 @@
-import SupermetricsStrategy from "./strategy";
+import SupermetricsStrategy, {
+  type SupermetricsVerifyCallback,
+} from "./strategy";
 
-export { SupermetricsStrategy };
+export { SupermetricsStrategy, type SupermetricsVerifyCallback };

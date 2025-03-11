@@ -5,7 +5,7 @@ interface VerifiedCallback {
   (err: any, user: any, info: any): void;
 }
 
-interface SupermetricsVerifyCallback {
+export interface SupermetricsVerifyCallback {
   (
     req: Request,
     linkId: string,
