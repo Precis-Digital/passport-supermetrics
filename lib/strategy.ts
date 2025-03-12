@@ -48,7 +48,7 @@ class SupermetricsStrategy extends Strategy {
     if (req.query.link_id && req.query.link_verifier) {
       const { link_id } = req.query;
 
-      function verified(err: Error | null, user: any, info: any): void {
+      const verified = (err: Error | null, user: any, info: any): void => {
         if (err) {
           return self.error(err);
         }
@@ -56,7 +56,7 @@ class SupermetricsStrategy extends Strategy {
           return self.fail(info);
         }
         self.success(user, info);
-      }
+      };
 
       getLoginLink(link_id, this.clientSecret)
         .then(({ data: loginLink }) => {
