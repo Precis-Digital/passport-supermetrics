@@ -1,8 +1,8 @@
 import { Strategy } from "passport-strategy";
-import { getLoginData, getLoginLink } from "./api";
+import { createLoginUrl, getLoginData, getLoginLink } from "./api";
 
 interface VerifiedCallback {
-  (err: any, user: any, info: any): void;
+  (err: any, user: any, info?: any): void;
 }
 
 export interface SupermetricsVerifyCallback {
@@ -17,10 +17,14 @@ export interface SupermetricsVerifyCallback {
 
 export interface SupermetricsStrategyOptions {
   clientSecret: string;
+  platform: string;
+  redirectUrl: string;
 }
 
 class SupermetricsStrategy extends Strategy {
   clientSecret: string;
+  platform: string;
+  callbackURL: string;
   profile?: {
     linkId: string;
     dataSourceLoginId: string;
@@ -33,6 +37,8 @@ class SupermetricsStrategy extends Strategy {
   ) {
     super();
     this.clientSecret = options.clientSecret;
+    this.platform = options.platform;
+    this.callbackURL = options.redirectUrl;
     this._verify = verifyCallback;
   }
 
@@ -77,6 +83,23 @@ class SupermetricsStrategy extends Strategy {
         .catch((err: Error) => {
           return self.error(err);
         });
+    }
+  }
+
+  async prepare(_: any, res: any) {
+    try {
+      const loginUrlResponse = await createLoginUrl({
+        platform: this.platform,
+        authToken: this.clientSecret,
+        redirectUrl: this.callbackURL,
+      });
+
+      res.json({
+        thirdPartyId: loginUrlResponse.data.link_id,
+        redirect: loginUrlResponse.data.login_url,
+      });
+    } catch (err: any) {
+      return res.json({ error: err.message });
     }
   }
 }

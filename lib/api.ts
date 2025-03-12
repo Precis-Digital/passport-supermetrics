@@ -28,7 +28,7 @@ export const getLoginLink = async (
   );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch login link");
+    throw new Error(await response.text());
   }
 
   return (await response.json()) as LoginLinkResponse;
@@ -50,8 +50,51 @@ export const getLoginData = async (
   );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch login data");
+    throw new Error(await response.text());
   }
 
   return (await response.json()) as LoginDataResponse;
+};
+
+interface CreateLoginUrlResponse {
+  data: {
+    login_url: string;
+    link_id: string;
+  };
+}
+
+export const createLoginUrl = async ({
+  platform,
+  authToken,
+  redirectUrl,
+  expiryTime = "1 hour",
+}: {
+  platform: string;
+  authToken: string;
+  redirectUrl: string;
+  expiryTime?: string;
+}): Promise<{
+  data: {
+    login_url: string;
+    link_id: string;
+  };
+}> => {
+  const response = await fetch(`${SUPERMETRICS_BASE_PATH}/ds/login/link`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      ds_id: platform,
+      expiry_time: expiryTime,
+      redirect_url: redirectUrl,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  return (await response.json()) as CreateLoginUrlResponse;
 };
