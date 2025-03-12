@@ -18,7 +18,7 @@ export interface SupermetricsVerifyCallback {
 export interface SupermetricsStrategyOptions {
   clientSecret: string;
   platform: string;
-  redirectUrl: string;
+  callbackURL: string;
 }
 
 class SupermetricsStrategy extends Strategy {
@@ -38,7 +38,7 @@ class SupermetricsStrategy extends Strategy {
     super();
     this.clientSecret = options.clientSecret;
     this.platform = options.platform;
-    this.callbackURL = options.redirectUrl;
+    this.callbackURL = options.callbackURL;
     this._verify = verifyCallback;
   }
 
