@@ -1,20 +1,18 @@
 {
   "name": "passport-supermetrics",
+  "version": "0.0.1",
   "packageManager": "yarn@3.6.0",
-  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git:/github.com/Precis-Digital/passport-supermetrics.git"
   },
   "dependencies": {
+    "@types/passport-strategy": "^0.2.38",
     "passport-strategy": "^1.0.0",
     "typescript": "^5.8.2"
   },
   "scripts": {
     "build": "tsc --declaration",
     "typecheck": "tsc --noEmit --incremental"
-  },
-  "devDependencies": {
-    "@types/passport-strategy": "^0.2.38"
   }
 }
