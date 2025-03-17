@@ -1,6 +1,6 @@
 {
   "name": "passport-supermetrics",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "yarn@3.6.0",
   "main": "lib/index.ts",
   "repository": {
@@ -9,14 +9,14 @@
   },
   "dependencies": {
     "@types/passport-strategy": "^0.2.38",
-    "passport-strategy": "^1.0.0",
-    "typescript": "^5.8.2"
+    "passport-strategy": "^1.0.0"
   },
   "scripts": {
     "build": "tsc --declaration",
     "typecheck": "tsc --noEmit --incremental"
   },
   "devDependencies": {
-    "tsc": "^2.0.4"
+    "tsc": "^2.0.4",
+    "typescript": "^5.8.2"
   }
 }
