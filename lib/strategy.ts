@@ -8,9 +8,10 @@ interface VerifiedCallback {
 export interface SupermetricsVerifyCallback {
   (
     req: Request,
-    linkId: string,
-    dataSourceLoginId: string,
-    displayName: string,
+    profile: {
+      loginId: string;
+      displayName: string;
+    },
     done: VerifiedCallback
   ): void;
 }
@@ -26,8 +27,7 @@ class SupermetricsStrategy extends Strategy {
   platform: string;
   callbackURL: string;
   profile?: {
-    linkId: string;
-    dataSourceLoginId: string;
+    loginId: string;
     displayName: string;
   };
   _verify: SupermetricsVerifyCallback;
@@ -63,18 +63,11 @@ class SupermetricsStrategy extends Strategy {
           getLoginData(loginLink.login_id, this.clientSecret)
             .then(({ data: loginData }) => {
               this.profile = {
-                linkId: link_id,
-                dataSourceLoginId: loginLink.login_id,
+                loginId: loginLink.login_id,
                 displayName: loginData.display_name,
               };
 
-              this._verify(
-                req,
-                this.profile.linkId,
-                this.profile.dataSourceLoginId,
-                this.profile.displayName,
-                verified
-              );
+              this._verify(req, this.profile, verified);
             })
             .catch((err: Error) => {
               return self.error(err);
@@ -86,12 +79,23 @@ class SupermetricsStrategy extends Strategy {
     }
   }
 
-  async prepare(_: any, res: any) {
+  async prepare(req: any, res: any) {
+    let dataSourceUsername: string | undefined;
+
     try {
+      if (req.query.login_id != null) {
+        const loginData = await getLoginData(
+          req.query.login_id,
+          this.clientSecret
+        );
+        dataSourceUsername = loginData.data.username;
+      }
+
       const loginUrlResponse = await createLoginUrl({
         platform: this.platform,
         authToken: this.clientSecret,
         redirectUrl: this.callbackURL,
+        dataSourceUsername,
       });
 
       res.json({

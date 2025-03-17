@@ -3,12 +3,14 @@ const SUPERMETRICS_BASE_PATH = "https://api.supermetrics.com/enterprise/v2";
 interface LoginLinkResponse {
   data: {
     login_id: string;
+    login_username: string;
   };
 }
 
 interface LoginDataResponse {
   data: {
     display_name: string;
+    username: string;
   };
 }
 
@@ -68,11 +70,13 @@ export const createLoginUrl = async ({
   authToken,
   redirectUrl,
   expiryTime = "1 hour",
+  dataSourceUsername,
 }: {
   platform: string;
   authToken: string;
   redirectUrl: string;
   expiryTime?: string;
+  dataSourceUsername?: string;
 }): Promise<{
   data: {
     login_url: string;
@@ -89,6 +93,9 @@ export const createLoginUrl = async ({
       ds_id: platform,
       expiry_time: expiryTime,
       redirect_url: redirectUrl,
+      ...(dataSourceUsername && {
+        require_username: dataSourceUsername,
+      }),
     }),
   });
 
